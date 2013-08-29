@@ -726,12 +726,12 @@
 
 ## <a name='whitespace'>Whitespace</a>
 
-  - Use soft tabs set to 2 spaces
+  - Use soft tabs set to 4 spaces (ignore all the 2 space indenting in the rest of this styleguide)
 
     ```javascript
     // bad
     function() {
-    ∙∙∙∙var name;
+    ∙∙var name;
     }
 
     // bad
@@ -741,7 +741,7 @@
 
     // good
     function() {
-    ∙∙var name;
+    ∙∙∙∙var name;
     }
     ```
   - Place 1 space before the leading brace.
@@ -939,9 +939,6 @@
     var val = new Number(inputValue);
 
     // bad
-    var val = +inputValue;
-
-    // bad
     var val = inputValue >> 0;
 
     // bad
@@ -952,6 +949,9 @@
 
     // good
     var val = parseInt(inputValue, 10);
+
+    // good (preferred)
+    var val = +inputValue;
     ```
 
   - If for whatever reason you are doing something wild and `parseInt` is your bottleneck and need to use Bitshift for [performance reasons](http://jsperf.com/coercion-vs-casting/3), leave a comment explaining why and what you're doing.
@@ -1053,7 +1053,7 @@
     this._firstName = 'Panda';
     ```
 
-  - When saving a reference to `this` use `_this`.
+  - When saving a reference to `this` use `that`.
 
     ```javascript
     // bad
@@ -1066,17 +1066,17 @@
 
     // bad
     function() {
-      var that = this;
+      var _this = this;
       return function() {
-        console.log(that);
+        console.log(_this);
       };
     }
 
     // good
     function() {
-      var _this = this;
+      var that = this;
       return function() {
-        console.log(_this);
+        console.log(that);
       };
     }
     ```
@@ -1101,21 +1101,6 @@
 ## <a name='accessors'>Accessors</a>
 
   - Accessor functions for properties are not required
-  - If you do make accessor functions use getVal() and setVal('hello')
-
-    ```javascript
-    // bad
-    dragon.age();
-
-    // good
-    dragon.getAge();
-
-    // bad
-    dragon.age(25);
-
-    // good
-    dragon.setAge(25);
-    ```
 
   - If the property is a boolean, use isVal() or hasVal()
 
@@ -1270,7 +1255,7 @@
 
 ## <a name='modules'>Modules</a>
 
-  - The module should start with a `!`. This ensures that if a malformed module forgets to include a final semicolon there aren't errors in production when the scripts get concatenated.
+  - The module should start with a `(`. This ensures that if a malformed module forgets to include a final semicolon there aren't errors in production when the scripts get concatenated.
   - The file should be named with camelCase, live in a folder with the same name, and match the name of the single export.
   - Add a method called noConflict() that sets the exported module to the previous version and returns this one.
   - Always declare `'use strict';` at the top of the module.
@@ -1278,7 +1263,7 @@
     ```javascript
     // fancyInput/fancyInput.js
 
-    !function(global) {
+    (function(global) {
       'use strict';
 
       var previousFancyInput = global.FancyInput;
@@ -1293,7 +1278,7 @@
       };
 
       global.FancyInput = FancyInput;
-    }(this);
+    }(this));
     ```
 
     **[[⬆]](#TOC)**
@@ -1359,6 +1344,9 @@
 
     // good (faster)
     $($sidebar[0]).find('ul');
+    
+    // very good (or even better if cached) as jQuery doesn't use sizzle for the selector, it falls back to getElementById
+    $('#sidebar').find('ul');
     ```
 
     **[[⬆]](#TOC)**
